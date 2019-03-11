@@ -46,26 +46,28 @@ else:
 
 #Making a vector of the vocabulary
 sents = sentences[args.startline: end+1]
-vocabulary = {}
+vocabularyNgram = {}
+listWords = []
 k = 0
 for line in sents:
     tokens = [nltk.tag.str2tuple(w) for w in line.split()]
+    listWords += [tokens[h][0] for h in range(len(tokens))]
     if len(tokens) >= args.ngram:
         nGram = "<start>"+ " "+tokens[0][0]+" "+tokens[1][0]
-        vocabulary[nGram] = k
+        vocabularyNgram[nGram] = k
         i = 0
         while(i+args.ngram-1 < len(tokens)):
             nGram = tokens[i][0]
             for j in range(i+1, i+args.ngram):
                 nGram += " "+tokens[j][0]
-            if nGram not in vocabulary:
-                vocabulary[nGram] = k+1
+            if nGram not in vocabularyNgram:
+                vocabularyNgram[nGram] = k+1
             i += 1
             k += 1
-        
+### Converting the list into a dictionary
+vocabularyWords = {i : j for i,j in zip(listWords,range(0,len(listWords)))}
 vect = DictVectorizer()
-matrix = vect.fit_transform(vocabulary)
-print(vocabulary)
+matrix = vect.fit_transform(vocabularyNgram)
 print("Constructing {}-gram model.".format(args.ngram))
 print("Writing table to {}.".format(args.outputfile))
 text.close()
