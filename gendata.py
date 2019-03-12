@@ -44,6 +44,7 @@ else:
     print("Ending at last line of file.")
     end = len(sentences)-1
 
+print("Constructing {}-gram model.".format(args.ngram))
 #Making a vector of the vocabulary
 sents = sentences[args.startline: end+1]
 vocabularyNgram = {}
@@ -65,10 +66,27 @@ for line in sents:
             i += 1
             k += 1
 ### Converting the list into a dictionary
-vocabularyWords = {i : j for i,j in zip(listWords,range(0,len(listWords)))}
-vect = DictVectorizer()
-matrix = vect.fit_transform(vocabularyNgram)
-print("Constructing {}-gram model.".format(args.ngram))
+k = 0
+vocabularyWords = {"<start>" : k}
+for i in range(1, len(listWords)):
+    if listWords[i] not in vocabularyWords:
+        vocabularyWords[listWords[i]] = k
+        k +=1
+#adding start symbol
+
+##training instances
+trainList = []
+for key,value in vocabularyNgram.items():
+    nSplit = key.split()
+    oneHot1 = [0]*(k+1)
+    oneHot2 = [0]*(k+1)
+    oneHot1[vocabularyWords[nSplit[0]]] =1
+    oneHot1[vocabularyWords[nSplit[1]]] =1
+    trainList.append([oneHot1,oneHot2,nSplit[2]])
+print(trainList[1])
+#v = DictVectorizer()
+#matrix = v.fit_transform(vocabularyNgram)
+
 print("Writing table to {}.".format(args.outputfile))
 text.close()
     
