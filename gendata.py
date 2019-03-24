@@ -69,7 +69,7 @@ def wordListToDictionary(wordList):
 
 def writeToFile(nGramList, fileExtension):
     """ Function to write the result list to a file """
-    with open(args.outputfile+fileExtension, "wb+") as testFile:
+    with open(args.outputfile+"."+fileExtension, "wb+") as testFile:
         pickle.dump(nGramList, testFile)
     testFile.close()
 

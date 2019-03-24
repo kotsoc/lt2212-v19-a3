@@ -20,6 +20,12 @@ parser.add_argument("modelfile", type=str,
 args = parser.parse_args()
 
 print("Loading data from file {}.".format(args.datafile))
+itemList = []
+with open(args.outputfile+".train", "rb") as rb:
+    itemList = pickle.load(rb)
+print(itemList)
+rb.close()
+
 print("Training {}-gram model.".format(args.ngram))
 print("Writing table to {}.".format(args.modelfile))
 
